@@ -9,3 +9,8 @@
     color:red !important;
     text-align: center !important;
 } */
+
+a{
+    text-align: center;
+    text-decoration: none;
+}
