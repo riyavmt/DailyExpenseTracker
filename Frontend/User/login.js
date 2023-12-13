@@ -19,7 +19,7 @@ async function login(e){
             alert.style.color = "blue";
             // alert.style.fontWeight = "bold";
             console.log(res.data);
-            form.reset();
+            window.location.href = "/Frontend/Expense/expense.html"
         }
         else{
             alert.innerHTML = res.data.message;
