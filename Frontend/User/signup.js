@@ -7,7 +7,7 @@ async function signup(e){
     let data = {
         name:e.target.name.value,
         email:e.target.mail.value,
-        password:e.target.pwd.value,
+        password:e.target.password.value,
     };
     
 
@@ -23,10 +23,9 @@ async function signup(e){
             form.reset();
         }
         else{
-            alert.innerHTML = "Account created successfully!";
-            alert.style.display = "block";
-            alert.style.color = "blue";
-            form.reset();
+            window.location.href = "/Frontend/User/login.html";
+            
+
             
         }
          
