@@ -5,7 +5,7 @@ form.addEventListener("submit",signup);
 async function signup(e){
     e.preventDefault();
     let data = {
-        name:e.target.name.value,
+        name: e.target.name.value,
         email:e.target.mail.value,
         password:e.target.password.value,
     };
@@ -17,7 +17,7 @@ async function signup(e){
         var alert = document.getElementById("message-alert");
         if(res.data.userFound){
             
-            alert.innerHTML = "Email already in use!";
+            alert.innerHTML = res.data.message;
             alert.style.display = "block";
             alert.style.color = "red";
             form.reset();

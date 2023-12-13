@@ -1,5 +1,6 @@
 const path = require("path");
 const express = require("express");
+const bcrypt = require("bcrypt");
 
 const app = express();
 const bodyParser = require("body-parser");
