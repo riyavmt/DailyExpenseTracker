@@ -19,6 +19,8 @@ async function login(e){
             alert.style.color = "blue";
             // alert.style.fontWeight = "bold";
             console.log(res.data);
+            console.log(res.data.token);
+            localStorage.setItem('token',res.data.token)
             window.location.href = "/Frontend/Expense/expense.html"
         }
         else{

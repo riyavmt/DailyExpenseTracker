@@ -23,10 +23,7 @@ async function signup(e){
             form.reset();
         }
         else{
-            window.location.href = "/Frontend/User/login.html";
-            
-
-            
+           window.location.href = "/Frontend/User/login.html";
         }
          
 

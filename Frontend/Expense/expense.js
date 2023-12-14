@@ -1,16 +1,22 @@
 const form = document.getElementById("myForm");
 form.addEventListener("submit",addExpense);
 const list = document.getElementById("myExpenseList");
+const token = localStorage.getItem('token');
 
 async function addExpense(e){
     e.preventDefault();
     let expenseData = {
         amount: e.target.amount.value,
         description: e.target.description.value,
-        category: e.target.category.value
+        category: e.target.category.value,
+
     }
     try{
-        const res = await axios.post("http://localhost:3000/add-expense",expenseData);
+        const res = await axios.post("http://localhost:3000/add-expense",expenseData,{
+            headers: {
+                'Authorization' : `${token}`
+            }
+        });
         addToList(res.data);
         form.reset();
 
@@ -43,10 +49,16 @@ async function remove(id){
         console.log(err);
     }
 }
+ 
 
 window.addEventListener("DOMContentLoaded",async()=>{
     try{
-        const res = await axios.get("http://localhost:3000/add-expense");
+        const res = await axios.get("http://localhost:3000/add-expense", {
+            headers: {
+                'Authorization': `${token}`
+            }
+        });
+        console.log(res.data);
         res.data.forEach(expense=>{
             addToList(expense);
         })
