@@ -9,7 +9,7 @@
 </head>
 <body>
     <div class = "container">
-        <h1>~Track your Expenses~</h1>
+        <h2>~Track your Expenses~</h2>
         <br>
         <form id="myForm">
             <label for = "amount" class="form-label">Add amount</label><br>
@@ -26,13 +26,18 @@
             </select><br>
             <br>
 
-            <button class = "btn btn-lg btn-dark w-100" type="submit">Add Expense</button>
+            <button id = "add" class = "btn btn-lg btn-dark w-100" type="submit">Add Expense</button>
 
         </form>
+
+        <div class="button-container">
+            <button class = "btn btn-md" id = "rzp-btn" type = "click">Buy Premium Membership</button>
+            <script src = "https://checkout.razorpay.com/v1/checkout.js"></script>
+        </div>
         
     </div>
-    <div id = "container">
-        <ul id = "myExpenseList">Expense List:</ul>
+    <div class = "list-container">
+        <ul id = "myExpenseList"><h3>Expense List:</h3></ul>
      </div>
     <script src="expense.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>

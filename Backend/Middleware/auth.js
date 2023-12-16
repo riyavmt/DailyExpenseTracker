@@ -1,7 +1,14 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
+const Orders = require('../models/order');
 
 const secretKey = process.env.JWT_SECRET
+
+
+// jwt.verify decodes the token, verifies its signature using the provided secret key, 
+// and performs optional checks to ensure the token's validity. 
+// If everything checks out, it returns the decoded payload, which often includes user information. 
+// If any part of the verification fails, an error is raised.
 
 const authenticate = async (req,res,next)=>{
     try{
@@ -12,7 +19,6 @@ const authenticate = async (req,res,next)=>{
         if(userFound){
             // console.log(JSON.stringify(user));
             req.user = user;
-            //req.userId = user.id;
             next();
         }
         else{
