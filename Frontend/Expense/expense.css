@@ -1,5 +1,4 @@
 
-
 .container{
     width: 550px !important;
     border: 2px solid black;
@@ -22,18 +21,21 @@
     display: flex;
     justify-content: center;
 }
-
-.button-container {
-    position: absolute;
-    top: 0;
-    right: 0;
-    margin-top: 10px;
-    margin-right: 10px;
+.navbar{
+    background-color: rgb(155, 205, 177) !important;   
+}
+#home,.button-container,#logout,#leaderboard {
+    
     background-color: rgb(215, 236, 224);
     border: 2px solid black;
     border-radius: 10px;
+    color: black;
     font-family:Georgia, 'Times New Roman', Times, serif ;
     font-style: italic;
+    width: fit-content;
+}
+#home:hover,.button-container:hover , #logout:hover, #leaderboard:hover{
+    background-color: rgb(173, 186, 178);
 }
 
 #rzp-btn{

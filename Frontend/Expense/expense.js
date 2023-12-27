@@ -4,6 +4,8 @@ const token = localStorage.getItem('token'); // we are retrieving the token from
 const list = document.getElementById("myExpenseList");
 const payBtn = document.getElementById("rzp-btn");
 payBtn.addEventListener("click",buyPremium);
+const logoutBtn = document.getElementById("logout");
+logoutBtn.addEventListener('click',logout);
 
 async function addExpense(e){
     e.preventDefault();
@@ -11,7 +13,6 @@ async function addExpense(e){
         amount: e.target.amount.value,
         description: e.target.description.value,
         category: e.target.category.value,
-
     }
     try{
         const res = await axios.post("http://localhost:3000/add-expense",expenseData,{
@@ -65,7 +66,8 @@ window.addEventListener("DOMContentLoaded",async()=>{
             addToList(expense);
         })
         if(!res.data.premiumUser) {
-            document.getElementById('rzp-btn').style.display='block'
+            document.getElementById('rzp-btn').style.display='block';
+            
         }
         else{
             document.getElementById('rzp-btn').style.display='none'
@@ -82,19 +84,19 @@ window.addEventListener("DOMContentLoaded",async()=>{
 
 
 async function buyPremium (e){
-    e.preventDefault;
+    // e.preventDefault;
     //  alert("You are a premium member now");
     try{
-        const res = await axios.get("http://localhost:3000/purchase/buy-premium",{
+        const res = await axios.get("http://localhost:3000/purchase/buy-premium",{ //get req along with header is sent to the backend
             headers:{
                 "Authorization":token
             }
         })
-        console.log(res);
-        const options = {
+        console.log(res); //we have the order details in the res object
+        const options = { //new object containing the key id, orderid and handler from the res.data
             "key": res.data.key_id,
             "order_id": res.data.order.id,
-            "handler": async function(res){
+            "handler": async function(res){ //post req function  in the handler after the payment is successful(sent to backend)
                 await axios.post("http://localhost:3000/purchase/updateTransactionStatus",{
                     order_id: options.order_id,
                     payment_id: res.razorpay_payment_id,
@@ -103,18 +105,18 @@ async function buyPremium (e){
                 {
                     headers:{"Authorization":token}
                 })
-                document.querySelector('.button-container').style.display='none';
+                document.querySelector('.button-container').style.display='none'; //the premium button disappears on successful payment
                 alert("You are a premium user now!")
             }
         }
         
-        const rzp = new Razorpay(options);
-        rzp.open();
+        const rzp = new Razorpay(options); //instance created 
+        rzp.open(); //opens a razorpay page
         e.preventDefault();
 
-        rzp.on('payment.failed',async function(res){
-            await axios.post("http://localhost:3000/purchase/updateTransactionStatus",{
-                order_id: options.order_id,
+        rzp.on('payment.failed',async function(res){ //when the payment fails,
+            await axios.post("http://localhost:3000/purchase/updateTransactionStatus",{ //post req is sent to the backend
+                order_id: options.order_id, 
                 payment_id: res.razorpay_payment_id,
                 success: false
             },
@@ -129,4 +131,24 @@ async function buyPremium (e){
     };
 
     
+}
+
+async function showLeaderboard(e){
+    try{
+        const res = await axios.get("http://localhost:3000/show-leaderboard");
+        console.log(res);
+
+    }
+    catch(err){
+        console.log(err);
+    }
+}
+
+function logout(e){
+    e.preventDefault();
+    var logoutConfirmed = window.confirm("Are you sure you want to logout?");
+    if(logoutConfirmed){
+        window.location.href = "/Frontend/User/login.html";
+    }
+   
 }
