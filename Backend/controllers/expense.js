@@ -4,7 +4,20 @@ const User = require("../models/user");
 exports.postAddExpense = async(req,res)=>{    //As soon as the user clicks on add expense btn, the post request is sent, 
     try{
         const expenseData = await Expenses.create({...req.body,userId :req.user.userId}); //the new expense record is created using the data in the request
+        // console.log(req.user,req.body);
+        const userTotal = await User.findByPk(req.user.userId)
+        console.log(userTotal.totalExpense);
+        let total = userTotal.totalExpense;
+        console.log("total before adding"+total);
+        total = total + +expenseData.amount;
+        console.log("total after adding"+ total);
+        await User.update(
+          {totalExpense:total},
+            {where:{id:req.user.userId}}
+        )
+        
         res.json(expenseData); //and sent as a response in the JSON format.
+
     }
     catch(err){
         console.log(err);

@@ -7,14 +7,11 @@ exports.showLeaderboard = async(req,res)=>{
     try{
         const results = await User.findAll({
             attributes: [
-                'id','name',[Sequelize.fn('SUM',Sequelize.col('amount')),'totalExpense']
-            ],
-            include:[
-                {model:Expenses,attributes:[]}
+                'name','totalExpense'
             ], 
-            group: 'userId',
             order: [['totalExpense','DESC']]
         });
+        console.log(results);
         res.json(results);
     }
     catch(err){

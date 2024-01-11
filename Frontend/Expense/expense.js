@@ -133,16 +133,7 @@ async function buyPremium (e){
     
 }
 
-async function showLeaderboard(e){
-    try{
-        const res = await axios.get("http://localhost:3000/show-leaderboard");
-        console.log(res);
 
-    }
-    catch(err){
-        console.log(err);
-    }
-}
 
 function logout(e){
     e.preventDefault();
