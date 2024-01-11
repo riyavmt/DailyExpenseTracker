@@ -1,25 +1,30 @@
 const Expenses = require("../models/expense");
 const User = require("../models/user");
+const sequelize = require("../util/database");
+const jwt= require("jsonwebtoken");
 
-exports.postAddExpense = async(req,res)=>{    //As soon as the user clicks on add expense btn, the post request is sent, 
+exports.postAddExpense = async(req,res)=>{
+    const t = await sequelize.transaction();    //As soon as the user clicks on add expense btn, the post request is sent, 
     try{
-        const expenseData = await Expenses.create({...req.body,userId :req.user.userId}); //the new expense record is created using the data in the request
+        const expenseData = await Expenses.create({...req.body,userId :req.user.userId},{transaction:t}); //the new expense record is created using the data in the request
         // console.log(req.user,req.body);
-        const userTotal = await User.findByPk(req.user.userId)
+        const userTotal = await User.findByPk(req.user.userId);
         console.log(userTotal.totalExpense);
         let total = userTotal.totalExpense;
         console.log("total before adding"+total);
         total = total + +expenseData.amount;
         console.log("total after adding"+ total);
         await User.update(
-          {totalExpense:total},
-            {where:{id:req.user.userId}}
-        )
-        
+            {totalExpense:total},
+              {where:{id:req.user.userId},transaction:t}
+              
+          )
+          await t.commit();
         res.json(expenseData); //and sent as a response in the JSON format.
 
     }
     catch(err){
+        await t.rollback();
         console.log(err);
     }
 }
@@ -39,16 +44,32 @@ exports.getAddExpense = async(req,res)=>{
 }
 
 exports.deleteExpense = async(req,res)=>{
+    const t = await sequelize.transaction();
     try{
         const id = req.params.id; //when the user clicks on del button, a del req is sent with the id as a param,we extract it here
-    const expense = await Expenses.findByPk(id);//using the id, we retrieve the record that needs to be deleted
-    expense.destroy();//once its retrieved, its removed from the db using destroy
+    const expense = await Expenses.findByPk(id);
+    const user = await User.findByPk(req.user.userId);
+    console.log('total before removing'+ user.totalExpense);
+    let total = user.totalExpense;
+    // console.log(expense.amount);
+    total = total - expense.amount;
+    console.log('total after removing'+ total);
+    await User.update(
+        {totalExpense:total},
+          {where:{id:req.user.userId},transaction:t}
+          
+      )
+    await expense.destroy({transaction:t});//once its retrieved, its removed from the db using destroy
+    await t.commit();
+
     res.sendStatus(200);
     }
     catch(err){
+        await t.rollback();
         console.log(err)
     }
 }
+
 
 
 

@@ -47,7 +47,7 @@ exports.postLogin = async(req,res)=>{  //when the user clicks on login btn, a po
                     throw new err("Something went wrong")
                 }
                 if(result===true){ //if the result is true, means the password is correct
-                    res.json({message:"Successfully logged in.",userDetails:true, token: generateToken(userDetails.id,userDetails.name)}); //and the response is sent
+                    res.json({message:"Successfully logged in.",userDetails:true, token: generateToken(userDetails.id,userDetails.name),premium:userDetails.premium_user}); //and the response is sent
                 }
                 else{
                     res.json({message:"Incorrect Password!"});//else the error msg is sent

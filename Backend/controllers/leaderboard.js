@@ -11,10 +11,11 @@ exports.showLeaderboard = async(req,res)=>{
             ], 
             order: [['totalExpense','DESC']]
         });
-        console.log(results);
+        console.log("The results are",results);
         res.json(results);
     }
     catch(err){
         console.log(err);
     }
 }
+

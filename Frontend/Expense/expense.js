@@ -42,7 +42,11 @@ function addToList(expenseData){
 
 async function remove(id){
     try{
-        const res = await axios.delete(`http://localhost:3000/delete-expense/${id}`);
+        const res = await axios.delete(`http://localhost:3000/delete-expense/${id}`,
+        {headers:{
+            "Authorization":token
+        }});
+        
         console.log(res.data);
         list.removeChild(document.getElementById(id));
 
@@ -131,6 +135,18 @@ async function buyPremium (e){
     };
 
     
+}
+
+function leaderboard(){
+    const isPremium = localStorage.getItem("premium");
+    console.log(isPremium);
+    console.log(typeof(isPremium));
+    if(isPremium=="true"){
+        window.location.href = "/Frontend/Premium/leaderboard.html";
+    }
+    else{
+        alert("You need to buy premium membership to access the leaderboard");
+    }
 }
 
 
