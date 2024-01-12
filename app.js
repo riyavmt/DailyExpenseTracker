@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken')
 const app = express();
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const Sib = require("sib-api-v3-sdk");
 
 const sequelize = require("./Backend/util/database");
 const userRouter = require("./Backend/routes/user");

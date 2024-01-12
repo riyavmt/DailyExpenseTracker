@@ -1,6 +1,8 @@
 const jwt= require("jsonwebtoken");
 const Users = require("../models/user");
 const bcrypt = require("bcrypt");
+const Sib = require("sib-api-v3-sdk");
+require("dotenv").config();
 
 exports.postSignup = async(req,res)=>{
     const password = req.body.password; //when the user clicks on signup btn, post req is sent along with the data, we retrieve the password from the req body
@@ -62,4 +64,30 @@ exports.postLogin = async(req,res)=>{  //when the user clicks on login btn, a po
     catch(err){
         console.log(err)
     }
-}  
+} 
+
+exports.forgotPassword = async (req,res) =>{
+    const client = Sib.ApiClient.instance;
+    var apiKey = client.authentications['api-key'];
+    apiKey.apiKey = process.env.API_KEY;
+
+    const apiInstance = new Sib.TransactionalEmailsApi();
+
+    let sendSmtpEmail = new Sib.SendSmtpEmail();
+    const sender ={email: 'riyavmt14@gmail.com'};
+    sendSmtpEmail = {
+        sender,
+        to: [{
+            email: req.body.email
+        }], 
+        subject : 'Password Reset Link',
+        textContent: `Click on the link below to reset your password.`
+    };
+    try {
+      const result = await apiInstance.sendTransacEmail(sendSmtpEmail);
+      
+    } catch (error) {
+      console.log(error);
+    }
+
+  }
