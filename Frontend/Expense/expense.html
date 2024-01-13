@@ -32,6 +32,9 @@
                         <button id="leaderboard"  class="btn btn-light" onclick = leaderboard()>Show Leaderboard</button>
                         
                     </li>
+                    <li class = "nav-item text-center">
+                        <button id = "downloadExpense" class = "btn btn-light" onclick = downloadExpenses()>Download Expenses</button>
+                    </li>
                     <li class="nav-item text-center">
                         <button id="logout" class="btn btn-dark">Logout</button>
                     </li>
@@ -67,6 +70,9 @@
     </div>
     <div class = "list-container">
         <ul id = "myExpenseList"><h3>Expense List:</h3></ul>
+     </div>
+     <div class = "list-container">
+        <ul></ul>
      </div>
     <script src="expense.js"></script>
     <script src = "https://checkout.razorpay.com/v1/checkout.js"></script>

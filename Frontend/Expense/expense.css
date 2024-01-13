@@ -24,7 +24,7 @@
 .navbar{
     background-color: rgb(155, 205, 177) !important;   
 }
-#home,.button-container,#logout,#leaderboard {
+#home,.button-container,#logout,#leaderboard,#downloadExpense {
     
     background-color: rgb(215, 236, 224);
     border: 2px solid black;
@@ -34,7 +34,7 @@
     font-style: italic;
     width: fit-content;
 }
-#home:hover,.button-container:hover , #logout:hover, #leaderboard:hover{
+#home:hover,.button-container:hover , #logout:hover, #leaderboard:hover,#downloadExpense:hover{
     background-color: rgb(173, 186, 178);
 }
 

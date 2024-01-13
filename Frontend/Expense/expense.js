@@ -110,6 +110,7 @@ async function buyPremium (e){
                     headers:{"Authorization":token}
                 })
                 document.querySelector('.button-container').style.display='none'; //the premium button disappears on successful payment
+                localStorage.setItem({premium:true})
                 alert("You are a premium user now!")
             }
         }
@@ -146,6 +147,16 @@ function leaderboard(){
     }
     else{
         alert("You need to buy premium membership to access the leaderboard");
+    }
+}
+
+function downloadExpenses(){
+    const isPremium = localStorage.getItem("premium");
+    if(isPremium == "true"){
+        window.location.href = "/Frontend/Premium/downloadExpenses.html";
+    }
+    else{
+        alert("You need to buy premium membership to access the download feature")
     }
 }
 
