@@ -17,6 +17,8 @@ const leaderboardRoute = require("./Backend/routes/leaderboard");
 const User = require("./Backend/models/user");
 const Expense = require("./Backend/models/expense");
 const Order = require("./Backend/models/order");
+const ForgotPasswordRequest = require("./Backend/models/forgotPasswordRequests");
+const { forgotPassword } = require('./Backend/controllers/user');
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -33,6 +35,8 @@ Expense.belongsTo(User); //But one expense belongs to only one user
 User.hasMany(Order); //One user can have many orders
 Order.belongsTo(User); //But one order belongs to only one user
 
+User.hasMany(ForgotPasswordRequest);
+ForgotPasswordRequest.belongsTo(User);
 async function startServer(){
     try{
         await sequelize.sync({force:false});

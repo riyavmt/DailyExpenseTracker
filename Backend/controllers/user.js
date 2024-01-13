@@ -1,8 +1,13 @@
 const jwt= require("jsonwebtoken");
 const Users = require("../models/user");
+const ForgotPasswordRequest = require("../models/forgotPasswordRequests");
 const bcrypt = require("bcrypt");
 const Sib = require("sib-api-v3-sdk");
 require("dotenv").config();
+const { v4: uuidv4 } = require('uuid');
+const path = require('path');
+
+const ForgotPasswordRequests = require("../models/forgotPasswordRequests");
 
 exports.postSignup = async(req,res)=>{
     const password = req.body.password; //when the user clicks on signup btn, post req is sent along with the data, we retrieve the password from the req body
@@ -67,6 +72,7 @@ exports.postLogin = async(req,res)=>{  //when the user clicks on login btn, a po
 } 
 
 exports.forgotPassword = async (req,res) =>{
+    const uuid = uuidv4();
     const client = Sib.ApiClient.instance;
     var apiKey = client.authentications['api-key'];
     apiKey.apiKey = process.env.API_KEY;
@@ -81,13 +87,58 @@ exports.forgotPassword = async (req,res) =>{
             email: req.body.email
         }], 
         subject : 'Password Reset Link',
-        textContent: `Click on the link below to reset your password.`
+        HTMLContent: `<html><head></head><body><a  href="http://localhost:3000/password/reset-password/${uuid}">Click to reset your password</a>`
     };
     try {
-      const result = await apiInstance.sendTransacEmail(sendSmtpEmail);
+        const user = await Users.findOne({where:{email:req.body.email}});
+        console.log("User: "+user.dataValues.id)
+        const uid = await ForgotPasswordRequest.create({uuid:uuid,userId:user.dataValues.id})
+      const result = await apiInstance.sendTransacEmail(sendSmtpEmail); //sending the email along withe data
+      res.json("Email sent Successfully!")
       
     } catch (error) {
       console.log(error);
     }
 
   }
+
+  exports.resetPassword = async(req,res)=>{
+    const uuid = req.params.uuid;
+    console.log("uuid is "+uuid);
+    try{
+        // res.sendFile(path.join(__dirname,'../../Frontend','User','resetPassword.html'))
+        const result = await ForgotPasswordRequest.findOne({where : { uuid : uuid }});
+        console.log("Result"+result);
+        if(result&&result.isActive){
+            res.sendFile(path.join(__dirname,'../../Frontend','User','resetPassword.html'))
+        }
+        else{
+            const htmlContent = `<html><head></head><body><h1>This Link has already been used.</h1><a href="http://localhost:3000/User/forgotPassword.html">Click here to reset password</body></html>`;
+            res.send(htmlContent);    
+          }
+    }
+    catch(err){
+        console.log(err)
+    }
+  }
+  exports.updatePassword = async(req,res)=>{
+    const password = req.body.password;
+    console.log("Password"+password);
+    const saltRounds=10;
+    const result = await ForgotPasswordRequest.findOne({where:{uuid:req.body.uuid}});
+    console.log("result"+result.dataValues.userId);
+    const user = await Users.findByPk(result.dataValues.userId);
+    bcrypt.hash(password,saltRounds,async(err,hash)=>{
+        if(err){console.log(err)}
+    
+        try{
+            await Users.update({password: hash} ,{where:{id:result.dataValues.userId}});
+            await ForgotPasswordRequest.update({ isActive: false },{where:{userId:result.dataValues.userId}});
+            console.log('Password updated');
+        } 
+        catch(err){
+            console.log(err);
+            res.status(500).json({ message: 'Error occurred while updating the password.' });
+        }
+    }) 
+}
