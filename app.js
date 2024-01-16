@@ -12,12 +12,13 @@ const sequelize = require("./Backend/util/database");
 const userRouter = require("./Backend/routes/user");
 const expenseRouter = require("./Backend/routes/expense");
 const purchaseRouter = require("./Backend/routes/purchase");
-const leaderboardRoute = require("./Backend/routes/leaderboard");
+const premiumRoute = require("./Backend/routes/premium");
 
 const User = require("./Backend/models/user");
 const Expense = require("./Backend/models/expense");
 const Order = require("./Backend/models/order");
 const ForgotPasswordRequest = require("./Backend/models/forgotPasswordRequests");
+const DownloadLogs = require("./Backend/models/downloadlogs");
 const { forgotPassword } = require('./Backend/controllers/user');
 
 app.use(cors());
@@ -27,7 +28,7 @@ app.use(bodyParser.urlencoded({extended:false}));
 app.use(userRouter);
 app.use(expenseRouter);
 app.use(purchaseRouter);
-app.use(leaderboardRoute);
+app.use(premiumRoute);
 
 User.hasMany(Expense); //One user can have many expenses
 Expense.belongsTo(User); //But one expense belongs to only one user
@@ -37,6 +38,9 @@ Order.belongsTo(User); //But one order belongs to only one user
 
 User.hasMany(ForgotPasswordRequest);
 ForgotPasswordRequest.belongsTo(User);
+
+User.hasMany(DownloadLogs); //One user can have many orders
+DownloadLogs.belongsTo(User);
 async function startServer(){
     try{
         await sequelize.sync({force:false});

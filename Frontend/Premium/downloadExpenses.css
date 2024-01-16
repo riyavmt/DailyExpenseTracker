@@ -1,0 +1,15 @@
+.container{
+    width: 550px !important;
+    border: 2px solid black;
+    border-radius: 10px;
+    margin-top: 100px;
+    padding: 20px;
+    text-align: center;
+
+    color:rgb(6, 1, 26);
+    background-color: rgb(155, 205, 177);
+    font-weight: bold;
+    font-size: larger;
+    font-family: Georgia, 'Times New Roman', Times, serif ;
+    font-style: italic;
+}

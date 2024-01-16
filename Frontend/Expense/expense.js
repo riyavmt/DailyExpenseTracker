@@ -6,7 +6,7 @@ const payBtn = document.getElementById("rzp-btn");
 payBtn.addEventListener("click",buyPremium);
 const logoutBtn = document.getElementById("logout");
 logoutBtn.addEventListener('click',logout);
-
+let flag = false;
 async function addExpense(e){
     e.preventDefault();
     let expenseData = {
@@ -150,15 +150,59 @@ function leaderboard(){
     }
 }
 
-function downloadExpenses(){
+async function downloadExpense(){
     const isPremium = localStorage.getItem("premium");
     if(isPremium == "true"){
-        window.location.href = "/Frontend/Premium/downloadExpenses.html";
+        try{
+            const result = await axios.get("http://localhost:3000/download-expense",{
+            headers:{
+                "Authorization":token
+            }
+            });
+            console.log(result);
+            const a = document.createElement("a");
+            a.href = result.data;
+            a.download = 'myexpense.txt';
+            a.click();
+        }
+        catch(err){
+            console.log(err)
+        }
     }
+    
+
     else{
         alert("You need to buy premium membership to access the download feature")
     }
 }
+
+// const list = document.getElementById("showDownloadLogs");
+const downloadList = document.getElementById("showDownloadLogs");
+async function showDownloads(){
+    try{
+        const res = await axios.get("http://localhost:3000/show-downloads",{
+            headers:{
+                "Authorization":token
+            }
+            });
+            res.data.Downloads.forEach((element,index) => {
+                addToList(element,index);
+            })
+            console.log("RES",res.data);
+    }
+    catch(err){
+        console.log(err);
+    }
+}
+
+
+function addToList(element,index){
+    const li = document.createElement('li');
+    li.innerHTML = `<span>File${index+1} downloaded on ${element.date.substring(1,11)}</span> <a href="${element.fileUrl}" ><button class="btn btn-sm btn-secondary">Download</button></a>`
+    downloadList.appendChild(li);
+}
+
+window.addEventListener("DOMContentLoaded",showDownloads);
 
 
 
