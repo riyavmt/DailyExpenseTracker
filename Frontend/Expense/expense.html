@@ -73,6 +73,25 @@
     </div>
     <div class = "list-container">
         <ul id = "myExpenseList"><h3>Expense List:</h3></ul>
+        <span>Rows Per page: <select class="mt-2" name="rows" id="rows">
+            <option  default></option>
+            <option value="3">3</option>
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="15">15</option>
+        </select>
+
+        </span></ul>
+        <div class="text-center align-items-center ">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                    <li class="page-item"><button>1</button></li>
+                    <li class="page-item"><button>2</button></li>
+                    <li class="page-item"><button>3</button></li>
+                </ul>
+            </nav>
+
+        </div>
      </div>
      <div class = "list-container">
         <ul id = "myDownloadList"><h3>My Downloads:</h3></ul>

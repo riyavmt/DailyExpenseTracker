@@ -60,13 +60,24 @@ exports.postAddExpense = async(req,res)=>{
 }
 
 exports.getAddExpense = async(req,res)=>{
+    const page = +req.query.page || 1;``
     try{
         const user = await User.findByPk(req.user.userId);
-        const expenseList = await Expenses.findAll({where:{userId:req.user.userId}}); //everytime the page reloads, get request is sent, and using findAll method, where thr userId matches with the userId in the req object,all the expenses in the list is retrieved
+        const expenseList = await Expenses.findAll({where:{userId:req.user.userId}},{
+          offset: (page - 1) * 3,
+          limit: 3,
+        });
+        const count = await Expenses.count() //everytime the page reloads, get request is sent, and using findAll method, where thr userId matches with the userId in the req object,all the expenses in the list is retrieved
         console.log(user.premium_user);
         // const expenseList = await req.user.getExpenses();
         console.log("expenseList"+ expenseList);
-        res.json({"ExpenseList":expenseList,"premiumUser":user.premium_user}); //and sent as a response in the JSON format
+        res.json({"ExpenseList":expenseList,"premiumUser":user.premium_user,pageData: {
+          currentPage: page,
+          hasNextPage: 3 * page < count,
+          nextPage: page+1,
+          hasPreviousPage: page > 1,
+          previousPage: page - 1
+      }}); //and sent as a response in the JSON format
     }
     catch(err){
         console.log(err);
@@ -134,5 +145,4 @@ exports.deleteExpense = async(req,res)=>{
     }
   }
 
-
-
+  

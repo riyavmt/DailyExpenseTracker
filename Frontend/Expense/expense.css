@@ -16,10 +16,14 @@
 }
 
 .list-container {
-    margin-top: 30px;
-    padding: 20px;
-    display: flex;
-    justify-content: center;
+        margin-top: 30px;
+        padding: 20px;
+    
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    
 }
 .navbar{
     background-color: rgb(155, 205, 177) !important;   

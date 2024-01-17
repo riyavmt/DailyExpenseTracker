@@ -20,7 +20,7 @@ async function addExpense(e){
                 'Authorization' : `${token}` // and sending it as a header in the post req along with the expense data
             }
         });
-        addToList(res.data);
+        addToExpenseList(res.data);
         form.reset();
 
     }
@@ -29,7 +29,7 @@ async function addExpense(e){
     }
 }
 
-function addToList(expenseData){
+function addToExpenseList(expenseData){
     const li = document.createElement("li");
     li.id = expenseData.id;
 
@@ -67,7 +67,7 @@ window.addEventListener("DOMContentLoaded",async()=>{
         });
         console.log(res.data.ExpenseList);
         res.data.ExpenseList.forEach(expense=>{
-            addToList(expense);
+            addToExpenseList(expense);
         })
         if(!res.data.premiumUser) {
             document.getElementById('rzp-btn').style.display='block';
@@ -110,7 +110,7 @@ async function buyPremium (e){
                     headers:{"Authorization":token}
                 })
                 document.querySelector('.button-container').style.display='none'; //the premium button disappears on successful payment
-                localStorage.setItem({premium:true})
+                localStorage.setItem('premium','true')
                 alert("You are a premium user now!")
             }
         }
@@ -177,8 +177,9 @@ async function downloadExpense(){
 }
 
 // const list = document.getElementById("showDownloadLogs");
-const downloadList = document.getElementById("showDownloadLogs");
+const downloadList = document.getElementById("myDownloadList");
 async function showDownloads(){
+    downloadList.innerHTML='';
     try{
         const res = await axios.get("http://localhost:3000/show-downloads",{
             headers:{
@@ -203,6 +204,48 @@ function addToList(element,index){
 }
 
 window.addEventListener("DOMContentLoaded",showDownloads);
+
+
+function getLiForPagination(page){
+    const li =document.createElement('li');
+    li.className='page-item';
+    const btn = document.createElement('button');
+    btn.className="btn btn-sm btn-dark"
+    btn.innerHTML=page;
+    btn.addEventListener('click', () => getCurrentPageExpense(page));
+    li.appendChild(btn);
+    return li;
+}
+function showPagination(pageData){
+    const pagination = document.querySelector('.pagination');
+    pagination.innerHTML='';
+    if(pageData.hasPreviousPage){
+        const li = getLiForPagination(pageData.previousPage);
+        pagination.appendChild(li);
+    }
+    const newLi = getLiForPagination(pageData.currentPage);
+    pagination.appendChild(newLi);
+    if (pageData.hasNextPage) {
+        const li = getLiForPagination(pageData.nextPage);
+        pagination.appendChild(li);
+    }
+}
+async function getCurrentPageExpense(page) {
+    try {
+        const expenseDetails = await axios.get(`http://localhost:3000/expense/add-expense?page=${page} `,{
+            headers:{'Authorization':token}
+        });
+        console.log(expenseDetails.data);
+        list.innerHTML='';
+        expenseDetails.data.expense.forEach((e) => addToExpenseList(e))
+        showPagination(expenseDetails.data.pageData);
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+
+
 
 
 
