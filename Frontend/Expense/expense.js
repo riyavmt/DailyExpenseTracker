@@ -257,6 +257,48 @@ async function getCurrentPageExpense(page) {
 
 
 
+function getLiForPagination(page){
+    const li =document.createElement('li');
+    li.className='page-item';
+    const btn = document.createElement('button');
+    btn.className="btn btn-sm btn-dark"
+    btn.innerHTML=page;
+    btn.addEventListener('click', () => getCurrentPageExpense(page));
+    li.appendChild(btn);
+    return li;
+}
+function showPagination(pageData){
+    const pagination = document.querySelector('.pagination');
+    pagination.innerHTML='';
+    if(pageData.hasPreviousPage){
+        const li = getLiForPagination(pageData.previousPage);
+        pagination.appendChild(li);
+    }
+    const newLi = getLiForPagination(pageData.currentPage);
+    pagination.appendChild(newLi);
+    if (pageData.hasNextPage) {
+        const li = getLiForPagination(pageData.nextPage);
+        pagination.appendChild(li);
+    }
+}
+async function getCurrentPageExpense(page) {
+    try {
+        const expenseDetails = await axios.get(`http://localhost:3000/expense/add-expense?page=${page} `,{
+            headers:{'Authorization':token}
+        });
+        console.log(expenseDetails.data);
+        list.innerHTML='';
+        expenseDetails.data.expense.forEach((e) => addToExpenseList(e))
+        showPagination(expenseDetails.data.pageData);
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+
+
+
+
 
 function logout(e){
     e.preventDefault();
