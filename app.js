@@ -1,5 +1,6 @@
 require('dotenv').config();
 const path = require("path");
+const fs = require("fs");
 const express = require("express");
 const bcrypt = require("bcrypt");
 const jwt = require('jsonwebtoken')
@@ -7,6 +8,9 @@ const app = express();
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const Sib = require("sib-api-v3-sdk");
+const helmet = require("helmet");
+const compression = require("compression");
+const morgan = require("morgan");
 
 const sequelize = require("./Backend/util/database");
 const userRouter = require("./Backend/routes/user");
@@ -20,8 +24,17 @@ const Order = require("./Backend/models/order");
 const ForgotPasswordRequest = require("./Backend/models/forgotPasswordRequests");
 const DownloadLogs = require("./Backend/models/downloadlogs");
 const { forgotPassword } = require('./Backend/controllers/user');
+const { Stream } = require('stream');
 
 app.use(cors());
+app.use(helmet());
+app.use(compression());
+
+const accessLogStream = fs.createWriteStream(
+    path.join(__dirname,'access.log'),
+    {flags: 'a'}
+);
+// app.use(morgan('combined',{stream:accessLogStream}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:false}));
 
@@ -44,7 +57,7 @@ DownloadLogs.belongsTo(User);
 async function startServer(){
     try{
         await sequelize.sync({force:false});
-        app.listen(3000,()=>{
+        app.listen(process.env.PORT||3000,()=>{
             console.log("Server is running")
         })
     }

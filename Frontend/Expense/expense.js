@@ -1,6 +1,7 @@
 const form = document.getElementById("myForm");
 form.addEventListener("submit",addExpense);
 const token = localStorage.getItem('token'); // we are retrieving the token from the local storage
+const premium = localStorage.getItem('premium');
 const list = document.getElementById("expenseList");
 const payBtn = document.getElementById("rzp-btn");
 payBtn.addEventListener("click",buyPremium);
@@ -189,20 +190,27 @@ async function downloadExpense(){
 const downloadList = document.getElementById("myDownloadList");
 async function showDownloads(){
     downloadList.innerHTML='';
-    try{
-        const res = await axios.get("http://localhost:3000/show-downloads",{
-            headers:{
-                "Authorization":token
-            }
-            });
-            res.data.Downloads.forEach((element,index) => {
-                addToList(element,index);
-            })
-            console.log("RES",res.data);
+    const isPremium = localStorage.getItem("premium");
+    if(isPremium){
+        try{
+            const res = await axios.get("http://localhost:3000/show-downloads",{
+                headers:{
+                    "Authorization":token
+                }
+                });
+                res.data.Downloads.forEach((element,index) => {
+                    addToList(element,index);
+                })
+                console.log("RES",res.data);
+        }
+        catch(err){
+            console.log(err);
+        }
     }
-    catch(err){
-        console.log(err);
+    else{
+        alert("You need to buy premium membership to access this feature!")
     }
+    
 }
 
 
