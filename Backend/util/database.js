@@ -4,7 +4,7 @@ const userSql = process.env.USER;
 const password = process.env.PASSWORD;
 
 const sequelize = new Sequelize(schema, userSql,password,{
-    dialect: "MySQL",
+    dialect: "mysql",
     host: process.env.HOSTNAME,
 })
 
