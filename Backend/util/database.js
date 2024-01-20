@@ -4,8 +4,8 @@ const userSql = process.env.USER;
 const password = process.env.PASSWORD;
 
 const sequelize = new Sequelize(schema, userSql,password,{
-    dialect: "mysql",
-    host: "localhost"
+    dialect: "MySQL",
+    host: process.env.HOSTNAME,
 })
 
 module.exports = sequelize;
