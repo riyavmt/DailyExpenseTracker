@@ -1,4 +1,8 @@
 const list = document.getElementById("leaderboardList");
+const token = localStorage.getItem('token'); // we are retrieving the token from the local storage
+const premium = localStorage.getItem('premium');
+const logoutBtn = document.getElementById("logout");
+logoutBtn.addEventListener('click',logout);
 async function showLeaderboard(){
     
     try{
@@ -23,4 +27,16 @@ function addToList(element){
 }
 
 window.addEventListener("DOMContentLoaded",showLeaderboard);
+
+
+
+
+function logout(e){
+    e.preventDefault();
+    var logoutConfirmed = window.confirm("Are you sure you want to logout?");
+    if(logoutConfirmed){
+        window.location.href = "/Frontend/User/login.html";
+    }
+   
+}
 

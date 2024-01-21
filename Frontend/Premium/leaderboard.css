@@ -13,3 +13,30 @@
     font-family: Georgia, 'Times New Roman', Times, serif ;
     font-style: italic;
 }
+
+.list-container {
+        margin-top: 30px;
+        padding: 20px;
+    
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    
+}
+.navbar{
+    background-color: rgb(155, 205, 177) !important;   
+}
+#home,.button-container,#logout,#leaderboard,#downloadExpense,#showDownloadLogs {
+    
+    background-color: rgb(215, 236, 224);
+    border: 2px solid black;
+    border-radius: 10px;
+    color: black;
+    font-family:Georgia, 'Times New Roman', Times, serif ;
+    font-style: italic;
+    width: fit-content;
+}
+#home:hover,.button-container:hover , #logout:hover, #leaderboard:hover,#downloadExpense:hover,#showDownloadLogs:hover{
+    background-color: rgb(173, 186, 178);
+}

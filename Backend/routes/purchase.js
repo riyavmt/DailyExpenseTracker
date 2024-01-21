@@ -4,7 +4,7 @@ const purchaseController = require("../controllers/purchase");
 const userAuthentication = require("../Middleware/auth");
 
 
-router.get("/purchase/buy-premium",userAuthentication.authenticate,purchaseController.getBuyPremium);
-router.post("/purchase/updateTransactionStatus",userAuthentication.authenticate,purchaseController.postupdateTransaction);
+router.get("/buy-premium",userAuthentication.authenticate,purchaseController.getBuyPremium);
+router.post("/updateTransactionStatus",userAuthentication.authenticate,purchaseController.postupdateTransaction);
 
 module.exports = router;
