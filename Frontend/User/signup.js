@@ -13,7 +13,7 @@ async function signup(e){
 
     try{
         
-        const res = await axios.post("http://localhost:3000/signup",data);
+        const res = await axios.post("http://13.51.175.59:3000/signup",data);
         var alert = document.getElementById("message-alert");
         if(res.data.userFound){
             
@@ -23,7 +23,7 @@ async function signup(e){
             form.reset();
         }
         else{
-           window.location.href = "/Frontend/User/login.html";
+           window.location.href = "/User/login.html";
         }
          
 

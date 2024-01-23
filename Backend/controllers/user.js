@@ -87,7 +87,7 @@ exports.forgotPassword = async (req,res) =>{
             email: req.body.email
         }], 
         subject : 'Password Reset Link',
-        HTMLContent: `<html><head></head><body><a  href="http://localhost:3000/password/reset-password/${uuid}">Click to reset your password</a>`
+        HTMLContent: `<html><head></head><body><a  href="http://13.51.175.59:3000/reset-password/${uuid}">Click to reset your password</a>`
     };
     try {
         const user = await Users.findOne({where:{email:req.body.email}});
@@ -113,7 +113,7 @@ exports.forgotPassword = async (req,res) =>{
             res.sendFile(path.join(__dirname,'../../Frontend','User','resetPassword.html'))
         }
         else{
-            const htmlContent = `<html><head></head><body><h1>This Link has already been used.</h1><a href="http://localhost:3000/User/forgotPassword.html">Click here to reset password</body></html>`;
+            const htmlContent = `<html><head></head><body><h1>This Link has already been used.</h1><a href="http://13.51.175.59:3000/forgotPassword.html">Click here to reset password</body></html>`;
             res.send(htmlContent);    
           }
     }

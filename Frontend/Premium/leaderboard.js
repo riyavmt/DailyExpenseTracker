@@ -7,7 +7,7 @@ async function showLeaderboard(){
     
     try{
         
-            const res = await axios.get("http://localhost:3000/show-leaderboard");
+            const res = await axios.get("http://13.51.175.59:3000/show-leaderboard");
             
             res.data.forEach(element => {
                 addToList(element);
@@ -35,7 +35,7 @@ function logout(e){
     e.preventDefault();
     var logoutConfirmed = window.confirm("Are you sure you want to logout?");
     if(logoutConfirmed){
-        window.location.href = "/Frontend/User/login.html";
+        window.location.href = "/User/login.html";
     }
    
 }

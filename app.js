@@ -29,6 +29,14 @@ app.use(expenseRoute);
 app.use('/purchase',purchaseRoute);
 app.use(premiumRoute);
 
+app.use((req,res)=>{
+    if(req.url=='/') res.redirect("http://13.51.175.59:3000/login")
+    else{
+        res.sendFile(path.join(__dirname,`Frontend/${req.url}`));
+    }
+    
+})
+
 User.hasMany(Expense); //One user can have many expenses
 Expense.belongsTo(User); //But one expense belongs to only one user
 
