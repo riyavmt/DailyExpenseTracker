@@ -11,7 +11,7 @@ async function login(e){
     
 
     try{
-        const res = await axios.post("http://13.51.175.59:3000/login",loginData);
+        const res = await axios.post("http://13.51.175.59/login",loginData);
         console.log(res);
         const alert = document.getElementById("message-alert");
         if(res.data.userDetails){ //When the email and password matches

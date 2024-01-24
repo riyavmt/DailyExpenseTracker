@@ -30,7 +30,7 @@ app.use('/purchase',purchaseRoute);
 app.use(premiumRoute);
 
 app.use((req,res)=>{
-    if(req.url=='/') res.redirect("http://13.51.175.59:3000/login")
+    if(req.url=='/') res.redirect("http://13.51.175.59/User/login.html")
     else{
         res.sendFile(path.join(__dirname,`Frontend/${req.url}`));
     }

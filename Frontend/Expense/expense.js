@@ -17,7 +17,7 @@ async function addExpense(e){
         category: e.target.category.value,
     }
     try{
-        const res = await axios.post("http://13.51.175.59:3000/add-expense",expenseData,{
+        const res = await axios.post("http://13.51.175.59/add-expense",expenseData,{
             headers: {
                 'Authorization' : `${token}` // and sending it as a header in the post req along with the expense data
             }
@@ -48,7 +48,7 @@ rowsPerPage.addEventListener("change", function() {
 })
 async function remove(id){
     try{
-        const res = await axios.delete(`http://13.51.175.59:3000/delete-expense/${id}`,
+        const res = await axios.delete(`http://13.51.175.59/delete-expense/${id}`,
         {headers:{
             "Authorization":token
         }});
@@ -72,7 +72,7 @@ window.addEventListener("DOMContentLoaded",async()=>{
     }
     else localStorage.setItem('rows',rowsPerPage.value);
     try{
-        const res = await axios.get(`http://13.51.175.59:3000/add-expense?page=1&rows=${rowsPerPage.value} `,{
+        const res = await axios.get(`http://13.51.175.59/add-expense?page=1&rows=${rowsPerPage.value} `,{
             headers:{'Authorization':token}
         });
        
@@ -102,7 +102,7 @@ async function buyPremium (e){
     // e.preventDefault;
     //  alert("You are a premium member now");
     try{
-        const res = await axios.get("http://13.51.175.59:3000/purchase/buy-premium",{ //get req along with header is sent to the backend
+        const res = await axios.get("http://13.51.175.59/purchase/buy-premium",{ //get req along with header is sent to the backend
             headers:{
                 "Authorization":token
             }
@@ -112,7 +112,7 @@ async function buyPremium (e){
             "key": res.data.key_id,
             "order_id": res.data.order.id,
             "handler": async function(res){ //post req function  in the handler after the payment is successful(sent to backend)
-                await axios.post("http://13.51.175.59:3000/purchase/updateTransactionStatus",{
+                await axios.post("http://13.51.175.59/purchase/updateTransactionStatus",{
                     order_id: options.order_id,
                     payment_id: res.razorpay_payment_id,
                     success: true
@@ -131,7 +131,7 @@ async function buyPremium (e){
         e.preventDefault();
 
         rzp.on('payment.failed',async function(res){ //when the payment fails,
-            await axios.post("http://13.51.175.59:3000/purchase/updateTransactionStatus",{ //post req is sent to the backend
+            await axios.post("http://13.51.175.59/purchase/updateTransactionStatus",{ //post req is sent to the backend
                 order_id: options.order_id, 
                 payment_id: res.razorpay_payment_id,
                 success: false
@@ -165,7 +165,7 @@ async function downloadExpense(){
     const isPremium = localStorage.getItem("premium");
     if(isPremium == "true"){
         try{
-            const result = await axios.get("http://13.51.175.59:3000/download-expense",{
+            const result = await axios.get("http://13.51.175.59/download-expense",{
             headers:{
                 "Authorization":token
             }
@@ -194,7 +194,7 @@ async function showDownloads(){
     const isPremium = localStorage.getItem("premium");
     if(isPremium){
         try{
-            const res = await axios.get("http://13.51.175.59:3000/show-downloads",{
+            const res = await axios.get("http://13.51.175.59/show-downloads",{
                 headers:{
                     "Authorization":token
                 }
@@ -249,7 +249,7 @@ function showPagination(pageData){
 }
 async function getCurrentPageExpense(page) {
     try {
-        const expenseDetails = await axios.get(`http://13.51.175.59:3000/add-expense?page=${page}&rows=${rowsPerPage.value} `,{
+        const expenseDetails = await axios.get(`http://13.51.175.59/add-expense?page=${page}&rows=${rowsPerPage.value} `,{
             headers:{'Authorization':token}
         });
         console.log(expenseDetails.data);

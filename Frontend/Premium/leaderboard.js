@@ -7,7 +7,7 @@ async function showLeaderboard(){
     
     try{
         
-            const res = await axios.get("http://13.51.175.59:3000/show-leaderboard");
+            const res = await axios.get("http://13.51.175.59/show-leaderboard");
             
             res.data.forEach(element => {
                 addToList(element);

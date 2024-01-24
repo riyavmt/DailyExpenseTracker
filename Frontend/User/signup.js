@@ -13,7 +13,7 @@ async function signup(e){
 
     try{
         
-        const res = await axios.post("http://13.51.175.59:3000/signup",data);
+        const res = await axios.post("http://13.51.175.59/signup",data);
         var alert = document.getElementById("message-alert");
         if(res.data.userFound){
             
