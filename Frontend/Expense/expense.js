@@ -15,9 +15,9 @@ async function addExpense(e){
         amount: e.target.amount.value,
         description: e.target.description.value,
         category: e.target.category.value,
-    }
+    };
     try{
-        const res = await axios.post("http://13.51.175.59/add-expense",expenseData,{
+        const res = await axios.post("http://localhost:3000/add-expense",expenseData,{
             headers: {
                 'Authorization' : `${token}` // and sending it as a header in the post req along with the expense data
             }
@@ -28,16 +28,16 @@ async function addExpense(e){
     }
     catch(err){
         console.log(err);
-        res.json({success:false})
+        res.json({success:false});
     }
 }
 
 function addToExpenseList(expenseData){
     const li = document.createElement("li");
-    li.id = expenseData.id;
+    li.id = expenseData._id;
 
     li.innerHTML = `<span>${expenseData.amount}-${expenseData.description}-${expenseData.category}</span>
-    <button class = "btn btn-sm btn-dark" id = "delete" onclick = "remove('${expenseData.id}')"> Delete </button>`
+    <button class = "btn btn-sm btn-dark" id = "delete" onclick = "remove('${expenseData._id}')"> Delete </button>`
 
     list.appendChild(li);
 
@@ -48,7 +48,7 @@ rowsPerPage.addEventListener("change", function() {
 })
 async function remove(id){
     try{
-        const res = await axios.delete(`http://13.51.175.59/delete-expense/${id}`,
+        const res = await axios.delete(`http://localhost:3000/delete-expense/${id}`,
         {headers:{
             "Authorization":token
         }});
@@ -72,20 +72,20 @@ window.addEventListener("DOMContentLoaded",async()=>{
     }
     else localStorage.setItem('rows',rowsPerPage.value);
     try{
-        const res = await axios.get(`http://13.51.175.59/add-expense?page=1&rows=${rowsPerPage.value} `,{
+        const res = await axios.get(`http://localhost:3000/add-expense?page=1&rows=${rowsPerPage.value} `,{
             headers:{'Authorization':token}
         });
        
-        console.log(res.data.ExpenseList);
+        console.log("Res.data",typeof(res.data.premiumUser));
         res.data.ExpenseList.forEach(expense=>{
             addToExpenseList(expense);
         })
-        if(!res.data.premiumUser) {
+        if(res.data.premiumUser== false) {
             document.getElementById('rzp-btn').style.display='block';
             
         }
         else{
-            document.getElementById('rzp-btn').style.display='none'
+            document.getElementById('rzp-btn').style.display='none';
         }
         showPagination(res.data.pageData);
     }
@@ -102,7 +102,7 @@ async function buyPremium (e){
     // e.preventDefault;
     //  alert("You are a premium member now");
     try{
-        const res = await axios.get("http://13.51.175.59/purchase/buy-premium",{ //get req along with header is sent to the backend
+        const res = await axios.get("http://localhost:3000/purchase/buy-premium",{ //get req along with header is sent to the backend
             headers:{
                 "Authorization":token
             }
@@ -112,7 +112,7 @@ async function buyPremium (e){
             "key": res.data.key_id,
             "order_id": res.data.order.id,
             "handler": async function(res){ //post req function  in the handler after the payment is successful(sent to backend)
-                await axios.post("http://13.51.175.59/purchase/updateTransactionStatus",{
+                await axios.post("http://localhost:3000/purchase/updateTransactionStatus",{
                     order_id: options.order_id,
                     payment_id: res.razorpay_payment_id,
                     success: true
@@ -121,8 +121,8 @@ async function buyPremium (e){
                     headers:{"Authorization":token}
                 })
                 document.querySelector('.button-container').style.display='none'; //the premium button disappears on successful payment
-                localStorage.setItem('premium','true')
-                alert("You are a premium user now!")
+                localStorage.setItem('premium','true');
+                alert("You are a premium user now!");
             }
         }
         
@@ -131,7 +131,7 @@ async function buyPremium (e){
         e.preventDefault();
 
         rzp.on('payment.failed',async function(res){ //when the payment fails,
-            await axios.post("http://13.51.175.59/purchase/updateTransactionStatus",{ //post req is sent to the backend
+            await axios.post("http://localhost:3000/purchase/updateTransactionStatus",{ //post req is sent to the backend
                 order_id: options.order_id, 
                 payment_id: res.razorpay_payment_id,
                 success: false
@@ -139,7 +139,7 @@ async function buyPremium (e){
             {
                 headers:{"Authorization":token}
             })
-            alert("Something went wrong! Try again.")
+            alert("Something went wrong! Try again.");
         } )
     }
     catch(err){
@@ -150,7 +150,7 @@ async function buyPremium (e){
 }
 
 function leaderboard(){
-    const isPremium = localStorage.getItem("premium");
+    const isPremium = localStorage.getItem("premium");//getting the premium status from the local storage
     console.log(isPremium);
     console.log(typeof(isPremium));
     if(isPremium=="true"){
@@ -165,7 +165,7 @@ async function downloadExpense(){
     const isPremium = localStorage.getItem("premium");
     if(isPremium == "true"){
         try{
-            const result = await axios.get("http://13.51.175.59/download-expense",{
+            const result = await axios.get("http://localhost:3000/download-expense",{
             headers:{
                 "Authorization":token
             }
@@ -183,7 +183,7 @@ async function downloadExpense(){
     
 
     else{
-        alert("You need to buy premium membership to access the download feature")
+        alert("You need to buy premium membership to access the download feature");
     }
 }
 
@@ -194,7 +194,7 @@ async function showDownloads(){
     const isPremium = localStorage.getItem("premium");
     if(isPremium){
         try{
-            const res = await axios.get("http://13.51.175.59/show-downloads",{
+            const res = await axios.get("http://localhost:3000/show-downloads",{
                 headers:{
                     "Authorization":token
                 }
@@ -209,7 +209,7 @@ async function showDownloads(){
         }
     }
     else{
-        alert("You need to buy premium membership to access this feature!")
+        alert("You need to buy premium membership to access this feature!");
     }
     
 }
@@ -217,7 +217,7 @@ async function showDownloads(){
 
 function addToList(element,index){
     const li = document.createElement('li');
-    li.innerHTML = `<span>File${index+1} downloaded on ${element.date.substring(1,11)}</span> <a href="${element.fileUrl}" ><button class="btn btn-sm btn-secondary">Download</button></a>`
+    li.innerHTML = `<span>File${index+1} downloaded on ${element.date.substring(1,11)}</span> <a href="${element.fileUrl}" ><button class="btn btn-sm btn-secondary">Download</button></a>`;
     downloadList.appendChild(li);
 }
 
@@ -227,7 +227,7 @@ function getLiForPagination(page){
     const li =document.createElement('li');
     li.className='page-item';
     const btn = document.createElement('button');
-    btn.className="btn btn-sm btn-dark"
+    btn.className="btn btn-sm btn-dark";
     btn.innerHTML=page;
     btn.addEventListener('click', () => getCurrentPageExpense(page));
     li.appendChild(btn);
@@ -249,12 +249,12 @@ function showPagination(pageData){
 }
 async function getCurrentPageExpense(page) {
     try {
-        const expenseDetails = await axios.get(`http://13.51.175.59/add-expense?page=${page}&rows=${rowsPerPage.value} `,{
+        const expenseDetails = await axios.get(`http://localhost:3000/add-expense?page=${page}&rows=${rowsPerPage.value} `,{
             headers:{'Authorization':token}
         });
         console.log(expenseDetails.data);
         list.innerHTML='';
-        expenseDetails.data.ExpenseList.forEach((e) => addToExpenseList(e))
+        expenseDetails.data.ExpenseList.forEach((e) => addToExpenseList(e));
         showPagination(expenseDetails.data.pageData);
     } catch (err) {
         console.log(err);

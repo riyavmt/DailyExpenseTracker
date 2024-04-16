@@ -8,17 +8,13 @@ const app = express();
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const Sib = require("sib-api-v3-sdk");
-const sequelize = require("./Backend/util/database");
+const mongoose = require("mongoose");
+
 const userRoute = require("./Backend/routes/user");
 const expenseRoute = require("./Backend/routes/expense");
 const purchaseRoute = require("./Backend/routes/purchase");
 const premiumRoute = require("./Backend/routes/premium");
 
-const User = require("./Backend/models/user");
-const Expense = require("./Backend/models/expense");
-const Order = require("./Backend/models/order");
-const ForgotPasswordRequest = require("./Backend/models/forgotPasswordRequests");
-const DownloadLogs = require("./Backend/models/downloadlogs");
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -30,32 +26,20 @@ app.use('/purchase',purchaseRoute);
 app.use(premiumRoute);
 
 app.use((req,res)=>{
-    if(req.url=='/') res.redirect("http://13.51.175.59/User/login.html")
+    if(req.url=='/') res.redirect("http://localhost:3000/User/login.html")
     else{
         res.sendFile(path.join(__dirname,`Frontend/${req.url}`));
     }
     
 })
 
-User.hasMany(Expense); //One user can have many expenses
-Expense.belongsTo(User); //But one expense belongs to only one user
-
-User.hasMany(Order); //One user can have many orders
-Order.belongsTo(User); //But one order belongs to only one user
-
-User.hasMany(ForgotPasswordRequest);
-ForgotPasswordRequest.belongsTo(User);
-
-User.hasMany(DownloadLogs); //One user can have many downloads
-DownloadLogs.belongsTo(User);
 async function startServer(){
     try{
-        await sequelize.sync({force:false});
+        await mongoose.connect(process.env.MONGOOSE_DATABASE);
         app.listen(process.env.PORT||3000,()=>{
             console.log("Server is running")
         })
     }
     catch(err){console.log(err)};
 }
-
 startServer();

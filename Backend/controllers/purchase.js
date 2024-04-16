@@ -16,7 +16,8 @@ exports.getBuyPremium = async(req,res)=>{   //get req is recieved
                 console.log(err) //if error during the order creation, it is logged
             }
             console.log(order);
-            const newOrder = await Order.create({userId: req.user.userId, orderId : order.id , status :'PENDING'}) //else an order record is created 
+            const newOrder = new Order({userId: req.user._id, orderId : order.id , status :'PENDING', userId: req.user._id})
+            await newOrder.save(); //else an order record is created 
             res.status(201).json({order,key_id : rzp.key_id}) //order:razorpay order details (to be used in frontend)
             
         })
@@ -30,13 +31,16 @@ exports.postupdateTransaction = async(req,res)=>{ //post req
     try{
         const {payment_id , order_id, success} = req.body; //body in the req function
         if(success){ //if success is true
-            const order =await Order.findOne({where: {orderid : order_id}}); //
-            const updatePaymentId = await Order.update({paymentId: payment_id , status : "SUCCESSFUL"},{where: {orderId : order_id}});
-            const updatePremiumStatus = await User.update({premium_user: true},{where: {id : order.userId}}) 
+            const order =await Order.findOne({orderId : order_id}); //
+            // const updatePaymentId = await Order.findOne({orderId : order_id});
+            await order.updateOne({paymentId: payment_id , status : "SUCCESSFUL"})
+            const updatePremiumStatus = await User.findOne({_id : order.userId});
+            await updatePremiumStatus.updateOne({premium_user: true});
             res.status(202).json({success:true , message: "Transaction successful"});
         }
         else{
-            const updateStatus = await Order.update({paymentId: payment_id, status : "FAILED"},{where:{orderId : order_id}});
+            const updateStatus = await Order.findOne({orderId : order_id});
+            await updateStatus.updateOne({paymentId: payment_id, status : "FAILED"}); 
             res.status(202).json({success:false , message: "Transaction unsuccessful"});
         }
     }

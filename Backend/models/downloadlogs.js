@@ -1,13 +1,28 @@
-const Sequelize = require('sequelize');
-const sequelize = require('../util/database');
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 
-const DownloadLogs = sequelize.define('downloadLogs',{
+const DownloadLogs = new Schema({
     fileUrl:{
-        type:Sequelize.STRING,
-        allowNull:false
+        type:String
     },
     date:{
-        type:Sequelize.STRING
+        type:String
     }
-})
-module.exports = DownloadLogs;
+});
+module.exports = mongoose.model("DownloadLogs",DownloadLogs)
+
+
+
+// const Sequelize = require('sequelize');
+// const sequelize = require('../util/database');
+
+// const DownloadLogs = sequelize.define('downloadLogs',{
+//     fileUrl:{
+//         type:Sequelize.STRING,
+//         allowNull:false
+//     },
+//     date:{
+//         type:Sequelize.STRING
+//     }
+// })
+// module.exports = DownloadLogs;
